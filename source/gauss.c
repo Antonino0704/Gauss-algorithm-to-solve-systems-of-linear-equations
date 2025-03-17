@@ -3,7 +3,7 @@
 #include "gauss.h"
 
 
-float * fillColumn(int n) {
+float *fillColumn(int n) {
     float *p = (float*) malloc(n * sizeof(float) + 1);
     int i;
     for(i = 0; i < n; i++) {
@@ -56,6 +56,14 @@ float sum(float **m, int n, float *b, int index) {
     return sum;
 }
 
+void freeMemory(float **m, int n) {
+    int i;
+    for(i = 0; i < n; i++) {
+        free(m[i]);
+    }
+    free(m);
+}
+
 float *calculate(float **m, int n) {
     int i, j, k;
     for(k = 0; k < n - 1; k++) {
@@ -79,5 +87,6 @@ float *calculate(float **m, int n) {
     for(k = n - 1, i = 0; k >= 0; k--, i++) {
         b[i] = (m[k][n] - sum(m, n, b, k)) / m[k][n-i-1];
     }
+    freeMemory(m, n);
     return b;
 }
