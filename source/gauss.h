@@ -3,6 +3,6 @@
 #define GAUSS_H
 
 float *calculate(float **m, int n);
-float **fillLine(int n);
+float **fillRow(int n);
 
 #endif

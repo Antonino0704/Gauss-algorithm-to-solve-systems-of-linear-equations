@@ -15,11 +15,11 @@ float *fillColumn(int n) {
     return p;
 }
 
-float **fillLine(int n) {
+float **fillRow(int n) {
     float **m = (float**) malloc(n * sizeof(float *));
     int i;
     for(i = 0; i < n; i++) {
-        printf("---Line %d---\n", i+1);
+        printf("---Row %d---\n", i+1);
         m[i] = fillColumn(n);
     }
     return m;
