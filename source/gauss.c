@@ -38,7 +38,7 @@ void getNumberFloat(float *value) {
 
 
 float *fillColumn(int n) {
-    float *p = (float*) malloc(n * sizeof(float) + 1);
+    float *p = (float*) malloc((n + 1) * sizeof(float));
     if(!p) {
         fprintf(stderr, "Error malloc falied\n");
         exit(EXIT_FAILURE);
