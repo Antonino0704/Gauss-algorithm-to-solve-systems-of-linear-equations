@@ -1,22 +1,64 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <errno.h>
+#include <limits.h>
 #include "gauss.h"
+
+
+void getNumberFloat(float *value) {
+    char max[1000];
+    char *end;
+    float n;
+
+    if (!fgets(max, sizeof(max), stdin)) {
+        fprintf(stderr, "Error fgets\n");
+        exit(EXIT_FAILURE);
+    }
+    
+    errno = 0;
+    n = strtof(max, &end);
+
+    if(end == max) {
+        fprintf(stderr, "Error value is null\n");
+        exit(EXIT_FAILURE);
+    }
+
+    if(*end != '\0' && *end != '\n') {
+        fprintf(stderr, "Error value is not valid\n");
+        exit(EXIT_FAILURE);
+    }
+
+     if (errno == ERANGE) {
+        fprintf(stderr, "value insert too long for float type\n");
+        exit(EXIT_FAILURE);
+    }
+
+    *value = n;
+}
 
 
 float *fillColumn(int n) {
     float *p = (float*) malloc(n * sizeof(float) + 1);
+    if(!p) {
+        fprintf(stderr, "Error malloc falied\n");
+        exit(EXIT_FAILURE);
+    }
     int i;
     for(i = 0; i < n; i++) {
         printf("insert value %d: ", i+1);
-        scanf("%f", p+i);
+        getNumberFloat(p+i);
     }
     printf("insert b value: ");
-    scanf("%f", p+n);
+    getNumberFloat(p+n);
     return p;
 }
 
 float **fillRow(int n) {
     float **m = (float**) malloc(n * sizeof(float *));
+    if(!m) {
+        fprintf(stderr, "Error malloc falied\n");
+        exit(EXIT_FAILURE);
+    }
     int i;
     for(i = 0; i < n; i++) {
         printf("---Row %d---\n", i+1);
@@ -62,6 +104,7 @@ void freeMemory(float **m, int n) {
         free(m[i]);
     }
     free(m);
+    m = NULL;
 }
 
 float *calculate(float **m, int n) {
@@ -84,6 +127,10 @@ float *calculate(float **m, int n) {
         }
     }
     float *b = (float*) malloc(n * sizeof(float));
+    if(!b) {
+        fprintf(stderr, "Error malloc falied\n");
+        exit(EXIT_FAILURE);
+    }
     for(k = n - 1, i = 0; k >= 0; k--, i++) {
         b[i] = (m[k][n] - sum(m, n, b, k)) / m[k][n-i-1];
     }
